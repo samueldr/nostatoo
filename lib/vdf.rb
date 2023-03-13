@@ -16,6 +16,9 @@ module VDF
     # NOTE: Other types apparently exist, but have not been needed yet.
     0x08 => :EndOfMap,
   }.freeze
+  TYPES_VALUE = TYPES.to_a.to_h do |key, value|
+    [value, key]
+  end.freeze
 
   def self.parse(contents)
     entry = parse_map_entry(contents, 0).first
@@ -80,5 +83,46 @@ module VDF
     end
 
     [entry, pos]
+  end
+
+  def self.write(filename, data)
+    unless data.is_a? Hash
+      raise "VDF.write must be given a Hash, as the root object of a VDF is a Map."
+    end
+
+    File.open(filename, "wb") do |file|
+      write_entry(file, data)
+    end
+  end
+
+  def self.write_type_for(file, data)
+    case data.class.name
+    when "Integer"
+      file.write([TYPES_VALUE[:Integer]].pack("C"))
+    when "String"
+      file.write([TYPES_VALUE[:String]].pack("C"))
+    when "Hash"
+      file.write([TYPES_VALUE[:Map]].pack("C"))
+    else
+      raise "<<UNHANDLED #{data.class.name} WHEN WRITING TYPE>>"
+    end
+  end
+
+  def self.write_entry(file, data)
+    case data.class.name
+    when "Integer"
+      file.write([data].pack("L<"))
+    when "String"
+      file.write([data].pack("Z*"))
+    when "Hash"
+      data.each do |key, value|
+        write_type_for(file, value)
+        file.write([key].pack("Z*"))
+        write_entry(file, value)
+      end
+      file.write([TYPES_VALUE[:EndOfMap]].pack("C"))
+    else
+      raise "<<UNHANDLED #{data.class.name} WHEN WRITING>>"
+    end
   end
 end
