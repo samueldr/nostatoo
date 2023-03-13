@@ -16,5 +16,16 @@ Style/StringLiterals:
   EnforcedStyle: double_quotes
 Style/TrailingCommaInHashLiteral:
   EnforcedStyleForMultiline: consistent_comma
+
 Style/IfUnlessModifier:
+  Enabled: false
+Style/MethodCallWithoutArgsParentheses:
+  Enabled: false
+Style/DefWithParentheses:
+  Enabled: false
+Style/StringLiteralsInInterpolation:
+  Enabled: false
+Style/StderrPuts:
+  Enabled: false
+Style/ModuleFunction:
   Enabled: false
