@@ -50,7 +50,6 @@ module Nostatoo
         edit-non-steam-game       Edit a given non-steam game
 
         dump-non-steam-games      Dumps all non-steam games as JSON
-        import-non-steam-games    Imports all non-steam games from JSON
     DESC
   end
 
