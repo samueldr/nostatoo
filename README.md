@@ -16,3 +16,11 @@ Manage non-steam apps.
 ## Planned features
 
  - Add new app
+
+* * *
+
+License
+-------
+
+This is published under the GPLv3 License **only**.
+
