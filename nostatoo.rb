@@ -222,6 +222,8 @@ module Nostatoo
          - start_directory, optional, will default to '"./"'
 
         To edit other fields, use `edit-non-steam-game`.
+
+        The new appid will be the only output.
       DESC
       exit 1
     end
@@ -254,6 +256,8 @@ module Nostatoo
     }
 
     VDF::Binary.write(shortcuts_vdf, shortcuts)
+
+    puts appid
   end
 
   def list_non_steam_games(*_)
