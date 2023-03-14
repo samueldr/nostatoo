@@ -39,11 +39,11 @@ Commands:
 
 ```
  $ nostatoo list-non-steam-games
-0: 2317857074, itch 
-1: 2721447904, PCSX2 
-2: 3245514289, Dolphin Emulator 
-3: 2511686724, PPSSPP 
-4: 2470680888, Video Player
+0: 2317857074: itch 
+1: 2721447904: PCSX2 
+2: 3245514289: Dolphin Emulator 
+3: 2511686724: PPSSPP 
+4: 2470680888: Video Player
 ```
 
 ### Adding non-steam games
