@@ -42,6 +42,15 @@ end
 module Nostatoo
   extend self
 
+  FIELDS = {
+    "appname" => "Name",
+    "appid" => "Steam appid",
+    "Exe" => "Executable",
+    "StartDir" => "Start directory",
+    "LaunchOptions" => "Launch options",
+    "ShortcutPath" => "Desktop file",
+  }
+
   def usage()
     puts <<~DESC
       Usage: nostatoo <command> [args...]
@@ -96,16 +105,8 @@ module Nostatoo
     appid = shortcut["appid"]
 
     puts "(##{id}) #{shortcut["appname"].to_json}"
-    fields = {
-      "appname" => "Name",
-      "appid" => "Steam appid",
-      "Exe" => "Executable",
-      "StartDir" => "Start directory",
-      "LaunchOptions" => "Launch options",
-      "ShortcutPath" => "Desktop file",
-    }
 
-    fields.each do |name, pretty|
+    FIELDS.each do |name, pretty|
       puts "  #{pretty}: #{shortcut[name].to_json}"
     end
 
@@ -124,7 +125,7 @@ module Nostatoo
     puts ""
     puts "Extra data:"
     shortcut.each do |key, value|
-      next if fields.keys.include?(key)
+      next if FIELDS.keys.include?(key)
 
       puts "  - #{key}: #{value.to_json}"
     end
@@ -144,6 +145,11 @@ module Nostatoo
 
           nostatoo edit-non-steam-game 4206969420 "appname=Nice app"
           nostatoo edit-non-steam-game 4206969420 'Executable="/run/current-system/sw/bin/nice-app"'
+
+        Known useful field names:
+        #{FIELDS.map { |k, v| "  - #{v}: #{k}" }.join("\n")}
+
+        See also field names for extra data in `show-non-steam-game`
       DESC
       exit 1
     end
