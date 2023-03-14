@@ -10,6 +10,8 @@ def app_fail(msg)
   exit 1
 end
 
+UINT32_MAX = ("1" * 32).to_i(2) - 1
+
 STEAM_DIR = File.join(Dir.home(), ".local/share/Steam")
 # Unclear how to get the userdata directory correctly.
 # For now it will only work when a single user is present.
@@ -52,6 +54,12 @@ module Nostatoo
         dump-non-steam-games      Dumps all non-steam games as JSON
         import-non-steam-games    Imports (replaces) all non-steam games from JSON
     DESC
+  end
+
+  def get_new_unused_appid(shortcuts)
+    appid = rand(UINT32_MAX)
+    appid = rand(UINT32_MAX) while select_appid(appid, shortcuts)
+    appid
   end
 
   def grid_dir()
@@ -204,6 +212,50 @@ module Nostatoo
     end
   end
 
+  def add_non_steam_game(*args)
+    if args.length < 2 || args.length > 3
+      puts <<~DESC
+        nostatoo add-non-steam-game <name> <executable> [start_directory]
+
+         - name is the pretty name of the app
+         - executable is the executable to run (can be searched in PATH)
+         - start_directory, optional, will default to '"./"'
+
+        To edit other fields, use `edit-non-steam-game`.
+      DESC
+      exit 1
+    end
+
+    name, exe, start_dir = args
+    start_dir ||= '"./"'
+
+    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    appid = get_new_unused_appid(shortcuts)
+    key = (shortcuts["shortcuts"].keys.last.to_i + 1).to_s
+
+    shortcuts["shortcuts"][key] = {
+      "appid" => appid,
+      "appname" => name,
+      "Exe" => exe,
+      "StartDir" => start_dir,
+      "icon" => "",
+      "ShortcutPath" => "",
+      "LaunchOptions" => "",
+      "IsHidden" => 0,
+      "AllowDesktopConfig" => 1,
+      "AllowOverlay" => 1,
+      "OpenVR" => 0,
+      "Devkit" => 0,
+      "DevkitGameID" => "",
+      "DevkitOverrideAppID" => 0,
+      "LastPlayTime" => 0,
+      "FlatpakAppID" => "",
+      "tags" => {},
+    }
+
+    VDF::Binary.write(shortcuts_vdf, shortcuts)
+  end
+
   def list_non_steam_games(*_)
     shortcuts = VDF::Binary.read(shortcuts_vdf)
     shortcuts["shortcuts"].each do |key, value|
@@ -248,6 +300,8 @@ when "list-non-steam-games"
   Nostatoo.list_non_steam_games(*ARGV)
 when "show-non-steam-game"
   Nostatoo.show_non_steam_game(*ARGV)
+when "add-non-steam-game"
+  Nostatoo.add_non_steam_game(*ARGV)
 when "edit-non-steam-game"
   Nostatoo.edit_non_steam_game(*ARGV)
 when "add-asset"
