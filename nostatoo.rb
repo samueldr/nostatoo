@@ -39,6 +39,10 @@ module Nostatoo
     DESC
   end
 
+  def grid_dir()
+    File.join(USERDATA_DIR, "config/grid")
+  end
+
   def shortcuts_vdf()
     File.join(USERDATA_DIR, "config/shortcuts.vdf")
   end
@@ -57,6 +61,8 @@ module Nostatoo
     id, shortcut = select_appid(appid, shortcuts["shortcuts"])
     app_fail "No game found for appid #{appid}." unless shortcut
 
+    appid = shortcut["appid"]
+
     puts "(##{id}) #{shortcut["appname"].to_json}"
     fields = {
       "appname" => "Name",
@@ -69,6 +75,23 @@ module Nostatoo
 
     fields.each do |name, pretty|
       puts "  #{pretty}: #{shortcut[name].to_json}"
+    end
+
+    puts ""
+    puts "Assets:"
+    [
+      "#{appid}.png",
+      "#{appid}p.png",
+      "#{appid}_logo.png",
+      "#{appid}_hero.png",
+    ].each do |asset|
+      present =
+        if File.exist?(File.join(grid_dir, asset))
+          "yes"
+        else
+          "NO"
+        end
+      puts "  - #{asset}: #{present}"
     end
 
     puts ""
