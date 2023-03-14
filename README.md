@@ -72,8 +72,8 @@ NOTE: Tags cannot be edited this way yet.
 
 For example:
 
-  nostatoo edit-non-steam-game 4206969420 "appname=Nice app"
-  nostatoo edit-non-steam-game 4206969420 'Executable="/run/current-system/sw/bin/nice-app"'
+  nostatoo edit-non-steam-game 1234564400 "appname=Nice app"
+  nostatoo edit-non-steam-game 1234564400 'Executable="/run/current-system/sw/bin/nice-app"'
 
 Known useful field names:
   - Name: appname
