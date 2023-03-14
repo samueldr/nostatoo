@@ -47,6 +47,15 @@ module Nostatoo
     File.join(USERDATA_DIR, "config/shortcuts.vdf")
   end
 
+  def asset_names_for_appid(appid)
+    {
+      "horizontal_capsule" => "#{appid}.png",
+      "vertical_capsule" => "#{appid}p.png",
+      "logo" => "#{appid}_logo.png",
+      "hero" => "#{appid}_hero.png",
+    }
+  end
+
   def select_appid(appid, shortcuts)
     appid = appid.to_i
     shortcuts.find do |_, item|
@@ -79,12 +88,7 @@ module Nostatoo
 
     puts ""
     puts "Assets:"
-    [
-      "#{appid}.png",
-      "#{appid}p.png",
-      "#{appid}_logo.png",
-      "#{appid}_hero.png",
-    ].each do |asset|
+    asset_names_for_appid(appid).each_value do |asset|
       present =
         if File.exist?(File.join(grid_dir, asset))
           "yes"
