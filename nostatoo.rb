@@ -50,6 +50,7 @@ module Nostatoo
         edit-non-steam-game       Edit a given non-steam game
 
         dump-non-steam-games      Dumps all non-steam games as JSON
+        import-non-steam-games    Imports (replaces) all non-steam games from JSON
     DESC
   end
 
@@ -215,6 +216,24 @@ module Nostatoo
     shortcuts = VDF::Binary.read(shortcuts_vdf)
     puts JSON.pretty_generate(shortcuts)
   end
+
+  def import_non_steam_games(*args)
+    if args.length != 1
+      puts <<~DESC
+        nostatoo import-non-steam-games <file>
+
+        All non-steam games are overwritten.
+
+        No validation of the structure is done.
+      DESC
+      exit 1
+    end
+
+    path = args.first
+    shortcuts = JSON.parse(File.read(path))
+
+    VDF::Binary.write(shortcuts_vdf, shortcuts)
+  end
 end
 
 if ARGV.empty?
@@ -235,6 +254,8 @@ when "add-asset"
   Nostatoo.add_asset(*ARGV)
 when "dump-non-steam-games"
   Nostatoo.dump_non_steam_games(*ARGV)
+when "import-non-steam-games"
+  Nostatoo.import_non_steam_games(*ARGV)
 else
   $stderr.puts "Unexpected command #{command.dump}"
   Nostatoo.usage()
