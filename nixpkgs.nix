@@ -1,7 +1,7 @@
 let
-  rev = "01413746884cde1173edda10f0745793ca7c998d";
-  sha256 = "sha256:1c70p2r8r5bfhx90c830ap59zql3ds50bh6wj866wvb9jj43axcc";
-  owner = "samueldr";
+  rev = "5a1dc8acd977ff3dccd1328b7c4a6995429a656b";
+  sha256 = "sha256:1irryhsaz946vjijknnjl2j29l6hnmfaqxg1a7jbnqv973fz0mv9";
+  owner = "NixOS";
   repo = "nixpkgs";
 in
 fetchTarball {
