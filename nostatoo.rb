@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require "shellwords"
 require "json"
 require_relative "lib/vdf"
 
@@ -20,6 +21,19 @@ USERDATA_DIR = Dir.glob(File.join(STEAM_DIR, "userdata/*")).tap do |dirs|
     exit 60
   end
 end.first
+
+# HTTP utils
+module HTTP
+  def self.download(url, dest)
+    cmd = [
+      "curl",
+      "-L",
+      "-o", dest,
+      url
+    ]
+    system(*cmd)
+  end
+end
 
 # Module for the app.
 module Nostatoo
