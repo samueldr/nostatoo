@@ -10,6 +10,8 @@ Metrics/MethodLength:
   Enabled: false
 Metrics/PerceivedComplexity:
   Enabled: false
+Metrics/ModuleLength:
+  Enabled: false
 
 # My preferred style
 Style/StringLiterals:
