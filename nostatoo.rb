@@ -203,17 +203,17 @@ module Nostatoo
     end
   end
 
-  def dump_non_steam_games(*_)
-    shortcuts = VDF::Binary.read(shortcuts_vdf)
-    puts JSON.pretty_generate(shortcuts)
-  end
-
   def list_non_steam_games(*_)
     shortcuts = VDF::Binary.read(shortcuts_vdf)
     shortcuts["shortcuts"].each do |key, value|
       puts "#{key}: #{value["appid"]}, #{value["appname"]} "
     end
     puts ""
+  end
+
+  def dump_non_steam_games(*_)
+    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    puts JSON.pretty_generate(shortcuts)
   end
 end
 
