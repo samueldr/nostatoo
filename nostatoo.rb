@@ -269,7 +269,7 @@ module Nostatoo
   def list_non_steam_games(*_)
     shortcuts = VDF::Binary.read(shortcuts_vdf)
     shortcuts["shortcuts"].each do |key, value|
-      puts "#{key}: #{value["appid"]}, #{value["appname"]} "
+      puts "#{key}: #{value["appid"]}: #{value["appname"]} "
     end
     puts ""
   end
