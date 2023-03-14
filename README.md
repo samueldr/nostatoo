@@ -14,6 +14,11 @@ Manage non-steam apps.
  - Edit assets for app
  - Add new app
 
+Unsupported:
+
+ - Editing tags (use the Steam UI)
+ - Removing an app (use the Steam UI or batch import)
+
 * * *
 
 ## Usage
