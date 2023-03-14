@@ -2,6 +2,7 @@
 
 require "shellwords"
 require "json"
+require "fileutils"
 require_relative "lib/vdf"
 
 def app_fail(msg)
@@ -159,6 +160,50 @@ module Nostatoo
     show_non_steam_game(appid)
   end
 
+  def add_asset(*args)
+    if args.length != 3
+      puts <<~DESC
+        nostatoo add-asset <appid> <type> <file|url>
+
+        Type is either
+
+          - horizontal_capsule (${APPID}.png)
+          - vertical_capsule (${APPID}p.png)
+          - logo (${APPID}_logo.png)
+          - hero (${APPID}_hero.png)
+
+        If a file is given, it is copied over.
+        If an URL is given, the image is downloaded
+
+        Existing assets are overwritten.
+      DESC
+      exit 1
+    end
+
+    appid, type, url = args
+    image_name = asset_names_for_appid(appid)[type]
+
+    unless image_name
+      $stderr.puts "Image type '#{type}' unknown."
+      exit 1
+    end
+
+    dest = File.join(grid_dir, image_name)
+    FileUtils.mkdir_p(grid_dir)
+
+    case url
+    when %r{^https?://}
+      puts "Downloading #{url.to_json} to #{dest.to_json}"
+      HTTP.download(url, dest)
+    when %r{^[a-zA-Z0-9]+://}
+      $stderr.puts "Protocol not supported."
+      exit 1
+    else
+      puts "Copying #{url.to_json} to #{dest.to_json}"
+      FileUtils.cp(url, dest)
+    end
+  end
+
   def dump_non_steam_games(*_)
     shortcuts = VDF::Binary.read(shortcuts_vdf)
     puts JSON.pretty_generate(shortcuts)
@@ -187,6 +232,8 @@ when "show-non-steam-game"
   Nostatoo.show_non_steam_game(*ARGV)
 when "edit-non-steam-game"
   Nostatoo.edit_non_steam_game(*ARGV)
+when "add-asset"
+  Nostatoo.add_asset(*ARGV)
 when "dump-non-steam-games"
   Nostatoo.dump_non_steam_games(*ARGV)
 else
