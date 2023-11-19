@@ -50,7 +50,7 @@ module Nostatoo
     "StartDir" => "Start directory",
     "LaunchOptions" => "Launch options",
     "ShortcutPath" => "Desktop file",
-  }
+  }.freeze
 
   def usage()
     puts <<~DESC
