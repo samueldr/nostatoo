@@ -95,10 +95,20 @@ module Nostatoo
     end
   end
 
+  def read_shortcuts()
+    if File.exist?(shortcuts_vdf)
+      VDF::Binary.read(shortcuts_vdf)
+    else
+      {
+        "shortcuts" => {},
+      }
+    end
+  end
+
   def show_non_steam_game(appid = nil, *_)
     app_fail "No appid given to show-non-steam-game" unless appid
 
-    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    shortcuts = read_shortcuts()
     id, shortcut = select_appid(appid, shortcuts["shortcuts"])
     app_fail "No game found for appid #{appid}." unless shortcut
 
@@ -154,7 +164,7 @@ module Nostatoo
       exit 1
     end
 
-    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    shortcuts = read_shortcuts()
     id, shortcut = select_appid(appid, shortcuts["shortcuts"])
     app_fail "No game found for appid #{appid}." unless shortcut
 
@@ -237,7 +247,7 @@ module Nostatoo
     name, exe, start_dir = args
     start_dir ||= '"./"'
 
-    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    shortcuts = read_shortcuts()
     appid = get_new_unused_appid(shortcuts)
     key = (shortcuts["shortcuts"].keys.last.to_i + 1).to_s
 
@@ -267,7 +277,7 @@ module Nostatoo
   end
 
   def list_non_steam_games(*_)
-    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    shortcuts = read_shortcuts()
     shortcuts["shortcuts"].each do |key, value|
       puts "#{key}: #{value["appid"]}: #{value["appname"]} "
     end
@@ -275,7 +285,7 @@ module Nostatoo
   end
 
   def dump_non_steam_games(*_)
-    shortcuts = VDF::Binary.read(shortcuts_vdf)
+    shortcuts = read_shortcuts()
     puts JSON.pretty_generate(shortcuts)
   end
 
