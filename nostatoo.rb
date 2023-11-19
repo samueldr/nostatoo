@@ -100,6 +100,11 @@ module Nostatoo
     end
   end
 
+  def write_shortcuts(shortcuts)
+    FileUtils.mkdir_p(config_dir)
+    VDF::Binary.write(shortcuts_vdf, shortcuts)
+  end
+
   def read_shortcuts()
     if File.exist?(shortcuts_vdf)
       VDF::Binary.read(shortcuts_vdf)
@@ -182,7 +187,7 @@ module Nostatoo
 
     shortcuts["shortcuts"][id] = edited
 
-    VDF::Binary.write(shortcuts_vdf, shortcuts)
+    write_shortcuts(shortcuts)
 
     puts "Edited..."
     puts ""
@@ -276,7 +281,7 @@ module Nostatoo
       "tags" => {},
     }
 
-    VDF::Binary.write(shortcuts_vdf, shortcuts)
+    write_shortcuts(shortcuts)
 
     puts appid
   end
@@ -309,7 +314,7 @@ module Nostatoo
     path = args.first
     shortcuts = JSON.parse(File.read(path))
 
-    VDF::Binary.write(shortcuts_vdf, shortcuts)
+    write_shortcuts(shortcuts)
   end
 end
 
