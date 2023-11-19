@@ -72,12 +72,16 @@ module Nostatoo
     appid
   end
 
+  def config_dir()
+    File.join(USERDATA_DIR, "config")
+  end
+
   def grid_dir()
-    File.join(USERDATA_DIR, "config/grid")
+    File.join(config_dir, "grid")
   end
 
   def shortcuts_vdf()
-    File.join(USERDATA_DIR, "config/shortcuts.vdf")
+    File.join(config_dir, "shortcuts.vdf")
   end
 
   def asset_names_for_appid(appid)
