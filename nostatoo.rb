@@ -17,14 +17,16 @@ STEAM_DIR = File.join(Dir.home(), ".local/share/Steam")
 # Unclear how to get the userdata directory correctly.
 # For now it will only work when a single user is present.
 # Alternatively we could force shortcuts to all users.
-USERDATA_DIR = Dir.glob(File.join(STEAM_DIR, "userdata/*")).tap do |dirs|
-  if dirs.empty?
-    app_fail "You must log into a steam account once before using this."
-  elsif dirs.length > 1
-    $stderr.puts "nostatoo currently works only when a single steam account is connected."
-    exit 60
-  end
-end.first
+USERDATA_DIR = Dir.glob(File.join(STEAM_DIR, "userdata/*"))
+  .select { |dir| !dir.match(%r{/0$}) }
+  .tap do |dirs|
+    if dirs.empty?
+      app_fail "You must log into a steam account once before using this."
+    elsif dirs.length > 1
+      $stderr.puts "nostatoo currently works only when a single steam account is connected."
+      exit 60
+    end
+  end.first
 
 # HTTP utils
 module HTTP
