@@ -11,7 +11,7 @@ def app_fail(msg)
   exit 1
 end
 
-UINT32_MAX = ("1" * 32).to_i(2) - 1
+UINT32_MAX = (1<<32) - 1
 
 STEAM_DIR = File.join(Dir.home(), ".local/share/Steam")
 # Unclear how to get the userdata directory correctly.
