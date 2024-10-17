@@ -54,6 +54,20 @@ module Nostatoo
     "ShortcutPath" => "Desktop file",
   }.freeze
 
+  #
+  # Anything lower is invalid and will be “sanitized” by steam.
+  # ```
+  # [2024-10-17 03:18:59] sanitize shortcut app id "env": replacing 1 with 2680746172, reason: k_unLocalAppIDFlag not set
+  # ```
+  #
+  # The meaning for the seemingly arbitrary `5000` here is unknown.
+  #
+  APPID_MIN = (1 << 31) | 5000
+
+  def shortcut_appid_valid?(id)
+    id >= APPID_MIN && id <= UINT32_MAX
+  end
+
   def usage()
     puts <<~DESC
       Usage: nostatoo <command> [args...]
@@ -71,8 +85,8 @@ module Nostatoo
   end
 
   def get_new_unused_appid(shortcuts)
-    appid = rand(UINT32_MAX)
-    appid = rand(UINT32_MAX) while select_appid(appid, shortcuts)
+    appid = rand(APPID_MIN..UINT32_MAX)
+    appid = rand(APPID_MIN..UINT32_MAX) while select_appid(appid, shortcuts)
     appid
   end
 
