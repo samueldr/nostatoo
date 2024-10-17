@@ -15,6 +15,15 @@ stdenv.mkDerivation {
   version = "WIP";
   src = ./.;
 
+  checkPhase = ''
+    runHook preCheck
+
+    ${ruby}/bin/ruby -c *.rb lib/*.rb
+
+    runHook postCheck
+  '';
+  doCheck = true;
+
   installPhase = ''
     runHook preInstall
 
