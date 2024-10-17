@@ -62,6 +62,8 @@ module Nostatoo
         list-non-steam-games      Lists non-steam games
         show-non-steam-game       Show a given non-steam game by appid
         edit-non-steam-game       Edit a given non-steam game
+        add-non-steam-game        Edit a given non-steam game
+        add-asset                 Assign assets to a given non-steam game
 
         dump-non-steam-games      Dumps all non-steam games as JSON
         import-non-steam-games    Imports (replaces) all non-steam games from JSON
