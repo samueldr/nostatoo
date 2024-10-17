@@ -7,7 +7,16 @@ require "fileutils"
 require_relative "lib/vdf"
 
 def app_fail(msg)
-  $stderr.puts("Error: #{msg}")
+  $stderr.puts(
+    msg.split("\n").map.with_index do |line, i|
+      if i == 0
+        "Error: #{line}"
+      else
+        "       #{line}"
+      end
+    end
+      .join("\n")
+  )
   exit 1
 end
 
