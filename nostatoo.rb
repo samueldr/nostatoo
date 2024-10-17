@@ -74,7 +74,17 @@ module Nostatoo
   APPID_MIN = (1 << 31) | 5000
 
   def shortcut_appid_valid?(id)
+    id = id.to_i if id.respond_to?(:to_i)
     id >= APPID_MIN && id <= UINT32_MAX
+  end
+
+  def assert_appid(id)
+    unless shortcut_appid_valid?(id)
+      app_fail [
+        "The given appid (#{id}) is not in the valid range for appids.",
+        "Hint: appids need to be in the range [#{APPID_MIN}..#{UINT32_MAX}]",
+      ].join("\n")
+    end
   end
 
   def usage()
@@ -209,6 +219,9 @@ module Nostatoo
 
     args.each do |arg|
       name, value = arg.split("=", 2)
+      if name == "appid"
+        assert_appid(value)
+      end
       edited[name] = value
     end
 
@@ -243,6 +256,10 @@ module Nostatoo
 
     appid, type, url = args
     image_name = asset_names_for_appid(appid)[type]
+
+    # Assert just in case, so we don't break assumptions.
+    # NOTE: we may want to warn, in the future, if writing assets for lower IDs has any use.
+    assert_appid(appid)
 
     unless image_name
       $stderr.puts "Image type '#{type}' unknown."
@@ -340,6 +357,13 @@ module Nostatoo
 
     path = args.first
     shortcuts = JSON.parse(File.read(path))
+
+    # Validate for bogus appid on import.
+    shortcuts["shortcuts"].each do |id, shortcut|
+      puts "Validating entry #{id}... (#{shortcut["appname"].inspect})"
+      assert_appid(shortcut["appid"])
+      puts " ... ok"
+    end
 
     write_shortcuts(shortcuts)
   end
